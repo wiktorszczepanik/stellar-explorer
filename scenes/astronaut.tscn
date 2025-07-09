@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=3 uid="uid://cnhemhg40epyi"]
+
+[ext_resource type="Script" uid="uid://bflg0l7jhootq" path="res://scripts/astronaut.gd" id="1_dmfei"]
+[ext_resource type="Texture2D" uid="uid://b1v1tgt70viqp" path="res://assets/astronaut/astronaut.png" id="2_dmfei"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lk35g"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a75ng"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nr1oy"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2evn4"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_75ag2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lk35g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a75ng")
+}],
+"loop": true,
+"name": &"idle_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nr1oy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2evn4")
+}],
+"loop": true,
+"name": &"idle_right",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dmfei"]
+size = Vector2(6, 14)
+
+[node name="Astronaut" type="CharacterBody2D"]
+script = ExtResource("1_dmfei")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_75ag2")
+animation = &"idle_right"
+autoplay = "idle_right"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_dmfei")
