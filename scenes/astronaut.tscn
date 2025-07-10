@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cnhemhg40epyi"]
+[gd_scene load_steps=31 format=3 uid="uid://cnhemhg40epyi"]
 
 [ext_resource type="Script" uid="uid://bflg0l7jhootq" path="res://scripts/astronaut.gd" id="1_dmfei"]
 [ext_resource type="Texture2D" uid="uid://b1v1tgt70viqp" path="res://assets/astronaut/astronaut.png" id="2_dmfei"]
@@ -75,6 +75,38 @@ region = Rect2(64, 16, 16, 16)
 atlas = ExtResource("2_dmfei")
 region = Rect2(80, 16, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_a5ukb"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(80, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mdpso"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(32, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jmm88"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(48, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sjtwl"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(64, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ttiyp"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(80, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qs0k"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vq3bn"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xg2s5"]
+atlas = ExtResource("2_dmfei")
+region = Rect2(32, 48, 16, 16)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_75ag2"]
 animations = [{
 "frames": [{
@@ -86,7 +118,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_left",
-"speed": 4.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -97,7 +129,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_right",
-"speed": 4.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -160,21 +192,66 @@ animations = [{
 "loop": true,
 "name": &"run_right",
 "speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a5ukb")
+}],
+"loop": true,
+"name": &"set_fly_final_left",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mdpso")
+}],
+"loop": true,
+"name": &"set_fly_final_right",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jmm88")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sjtwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ttiyp")
+}],
+"loop": true,
+"name": &"set_fly_left",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qs0k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vq3bn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xg2s5")
+}],
+"loop": false,
+"name": &"set_fly_right",
+"speed": 1.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dmfei"]
-size = Vector2(6, 14)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dmfei"]
+radius = 3.0
+height = 14.0
 
 [node name="Astronaut" type="CharacterBody2D"]
+z_index = 1
 script = ExtResource("1_dmfei")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 physics_interpolation_mode = 1
 sprite_frames = SubResource("SpriteFrames_75ag2")
-animation = &"jump_left"
+animation = &"idle_left"
 autoplay = "idle_right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_dmfei")
+shape = SubResource("CapsuleShape2D_dmfei")

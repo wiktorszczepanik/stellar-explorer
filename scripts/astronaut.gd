@@ -1,54 +1,83 @@
 extends CharacterBody2D
 
 
-const SPEED = 75.0
-const JUMP_VELOCITY = -320.0
+const SPEED = 65.0
+const JUMP_VELOCITY = -120.0
+const FLY_TRAJECTORY = 1000
+const FLY_VELOCITY_FACTOR = -4
+const MAX_FLY_RANGE_COUNTER = 110
 
-var last_x_direction = true
+var last_general_x_direction : bool = true
+var last_on_floor_x_direction : bool = true
+
+var fly_action_presed : int = -1
+var fly_range_counter : int = 0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-func set_floor_animation(direction) -> void:
-	if direction == true:
-		animated_sprite.play("idle_right")
-	else:
-		animated_sprite.play("idle_left")
-		
-func set_above_ground_animation(direction) -> void:
-	if direction == true:
-		animated_sprite.play("jump_right")
-	else:
-		animated_sprite.play("jump_left")
-		
 		
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor(): 
 		velocity += get_gravity() * delta
-		
-	# Handle jump.
+	
+	# Handle init x direction (-1.0, 0.0, 1.0)
+	var current_x_direction := Input.get_axis("move_left", "move_right")
+	
+	# Handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-
-	# Handle floor animation (-1, 0, 1)
-	var current_x_direction := Input.get_axis("move_left", "move_right")
+		last_on_floor_x_direction = true if current_x_direction >= 0 else false
 		
-	# Basic animation setup
+	if Input.is_action_just_pressed("fly") and is_on_floor():
+		fly_action_presed = 1
+		fly_range_counter += 1
+	if Input.is_action_just_released("fly") and is_on_floor():
+		velocity.y = fly_range_counter * FLY_VELOCITY_FACTOR
+		fly_action_presed = 0
+		fly_range_counter = 0
+
+	# Cannot change direction of jump above the ground
+	current_x_direction = set_basic_player_animation(current_x_direction)
+		
+	
+	if current_x_direction: velocity.x = current_x_direction * SPEED	
+	else: velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	move_and_slide()
+	
+# Idle, run, jump
+func set_basic_player_animation(current_x_direction) -> float:
 	if is_on_floor():
 		if current_x_direction > 0:
 			animated_sprite.play("run_right")
-			last_x_direction = true
+			last_general_x_direction = true
 		elif current_x_direction < 0:
 			animated_sprite.play("run_left")
-			last_x_direction = false
-		else:
-			set_floor_animation(last_x_direction)
+			last_general_x_direction = false
+		else: 
+			if fly_action_presed == 1:
+				if fly_range_counter < MAX_FLY_RANGE_COUNTER:
+					if last_general_x_direction == true:
+						animated_sprite.play("set_fly_right")
+					else:
+						animated_sprite.play("set_fly_left")
+					fly_range_counter += 1
+				else:
+					if last_general_x_direction == true:
+						animated_sprite.play("set_fly_final_right")
+					else:
+						animated_sprite.play("set_fly_final_left")
+			elif fly_action_presed == 0:
+				fly_action_presed = -1
+			else:
+				if last_general_x_direction == true:
+					animated_sprite.play("idle_right")
+				else: animated_sprite.play("idle_left")
 	else:
-		set_above_ground_animation(last_x_direction)
-
-	if current_x_direction:
-		velocity.x = current_x_direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
+		if last_general_x_direction == true:
+			animated_sprite.play("jump_right")
+		else: animated_sprite.play("jump_left")
+		current_x_direction = 1.0 if last_general_x_direction else -1.0
+		
+	return current_x_direction
