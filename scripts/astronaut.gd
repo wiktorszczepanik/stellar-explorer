@@ -1,9 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED = 65.0
-const JUMP_VELOCITY = -120.0
-const FLY_TRAJECTORY = 1000
+const SPEED = 75 # 65.0
 const FLY_VELOCITY_FACTOR = -4
 const MAX_FLY_RANGE_COUNTER = 110
 
@@ -15,7 +13,7 @@ var fly_range_counter : int = 0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-		
+
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor(): 
@@ -24,14 +22,11 @@ func _physics_process(delta: float) -> void:
 	# Handle init x direction (-1.0, 0.0, 1.0)
 	var current_x_direction := Input.get_axis("move_left", "move_right")
 	
-	# Handle jump
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		last_on_floor_x_direction = true if current_x_direction >= 0 else false
-		
+	# Handle jump / fly
 	if Input.is_action_just_pressed("fly") and is_on_floor():
 		fly_action_presed = 1
-		fly_range_counter += 1
+		fly_range_counter += 2
+		
 	if Input.is_action_just_released("fly") and is_on_floor():
 		velocity.y = fly_range_counter * FLY_VELOCITY_FACTOR
 		fly_action_presed = 0
@@ -39,7 +34,6 @@ func _physics_process(delta: float) -> void:
 
 	# Cannot change direction of jump above the ground
 	current_x_direction = set_basic_player_animation(current_x_direction)
-		
 	
 	if current_x_direction: velocity.x = current_x_direction * SPEED	
 	else: velocity.x = move_toward(velocity.x, 0, SPEED)
@@ -62,7 +56,7 @@ func set_basic_player_animation(current_x_direction) -> float:
 						animated_sprite.play("set_fly_right")
 					else:
 						animated_sprite.play("set_fly_left")
-					fly_range_counter += 1
+					fly_range_counter += 2
 				else:
 					if last_general_x_direction == true:
 						animated_sprite.play("set_fly_final_right")

@@ -143,9 +143,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_i7334")
 }],
-"loop": true,
+"loop": false,
 "name": &"jump_right",
-"speed": 5.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -221,7 +221,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"set_fly_left",
-"speed": 1.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -235,7 +235,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"set_fly_right",
-"speed": 1.0
+"speed": 2.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dmfei"]
@@ -249,7 +249,7 @@ script = ExtResource("1_dmfei")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 physics_interpolation_mode = 1
 sprite_frames = SubResource("SpriteFrames_75ag2")
-animation = &"idle_left"
+animation = &"jump_right"
 autoplay = "idle_right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
